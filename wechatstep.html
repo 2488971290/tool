@@ -72,7 +72,7 @@
                 </ul>
               </div>
               <div class="card-body">
-               <p> 由于站长代码不会写，所以点击提交后没有弹窗提示，自行查看是否成功</p>
+               <p> 由于站长代码不会写，所以bug多</p>
                <p>所以你要注意账号密码是否正确！</p> 
                 <p>所以你要注意账号密码是否正确！</p> 
                <p>所以你要注意账号密码是否正确！</p>              
@@ -85,24 +85,24 @@
               <div class="card-header"><h4>微信刷步数</h4></div>
               上面应该有个使用说明<br>如果没有请使用手机端查看
               <div class="card-body">
-                <form id="myForm" >
-                  <div class="form-group">
-                    <label for="example-nf-email">zeep life账号</label>
-                    <input class="form-control" type="text" id="user" name="user" placeholder="请输入zeep life账号.">
-                  </div>
-                  <div class="form-group">
-                    <label for="example-nf-password">zeep life密码</label>
-                    <input class="form-control" type="password" id="password" name="password" placeholder="请输入zeep life密码.">
-                  </div>
-                  <div class="form-group">
-                    <label for="example-nf-password">需要的步数</label>
-                    <input class="form-control"  id="step" name="step" placeholder="请输入你要刷的步数.">
-                  </div>
-                  <div class="form-group">
-                    <button class="btn btn-primary edit-btn" target-form="add-form" type="submit" onclick="sub()">提交修改</button>
-                  </div>
-                </form>
-                
+               <form id="myForm"  onsubmit="submitForm(event)">
+  <div class="form-group">
+    <label for="user">zeep life账号</label>
+    <input class="form-control" type="text" id="user" name="user" placeholder="请输入zeep life账号.">
+  </div>
+  <div class="password">
+    <label for="example-nf-password">zeep life密码</label>
+    <input class="form-control" type="password" id="password" name="password" placeholder="请输入zeep life密码.">
+  </div>
+  <div class="step">
+    <label for="example-nf-password">需要的步数</label>
+    <input class="form-control"  id="step" name="step" placeholder="请输入你要刷的步数.">
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary edit-btn" target-form="add-form" type="submit">提交修改</button>
+  </div>
+</form>
+ 
               </div>
             </div>
           
@@ -136,20 +136,36 @@
 <script type="text/javascript" src="js/perfect-scrollbar.min.js"></script>
 <script type="text/javascript" src="js/main.min.js"></script>
 <script>
-function sub() {
-  var user = $("#user").val();
-  var password = $("#password").val();
-  var step = $("#step").val();
-  
-  var url = "https://apis.jxcxin.cn/api/mi?user=" + user + "&password=" + password + "&step=" + step;
+function submitForm(event) {
+  event.preventDefault();
+  const user = document.getElementById('user').value;
+  const password = document.getElementById('password').value;
+  const step = document.getElementById('step').value;
 
-$.get(url, function(data) {
-    if (data.code == "200") {
-      alert("成功");
-    } else {
-      alert("失败");
+  const url = 'https://apis.jxcxin.cn/api/mi';
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+  xhr.onreadystatechange = function() {
+        
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {   
+        const response = JSON.parse(xhr.responseText);
+        if (response.code == 200) {
+          alert('提交成功');
+        } else {
+          alert('提交失败');
+        }
+      } else {
+        console.error('请求出错', xhr.status);
+      }
     }
-  });
+  };
+
+  const data = `user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}&step=${encodeURIComponent(step)}`;
+  xhr.send(data);
 }
 </script>
 </body>
