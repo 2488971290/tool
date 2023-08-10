@@ -26,6 +26,8 @@
           <ul class="nav nav-drawer">
             <li class="nav-item"> <a href="index.html"><i class="mdi mdi-home"></i> 后台首页</a> </li>
             <li class="nav-item active"> <a href="wechatstep.html"><i class="mdi mdi-self"></i> 微信刷步数</a> </li>
+            <li class="nav-item"> <a href="qbang.html"><i class="mdi mdi-self"></i> Q绑查询</a> </li>
+          
           </ul>
       </div>  
       
@@ -59,6 +61,24 @@
       
       <div class="container-fluid">
         
+        <!-- 弹窗内容 -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">提交结果</h4>
+              </div>
+              <div class="modal-body" id="modalBodyContent">
+                弹窗内容...
+                <p>结果会变的，等待1-5秒</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+              </div>
+            </div>
+          </div>
+        </div>
         
         <!--说明卡片-->
         <div class="col-sm-6 col-lg-3">
@@ -99,14 +119,14 @@
     <input class="form-control"  id="step" name="step" placeholder="请输入你要刷的步数.">
   </div>
   <div class="form-group">
-    <button class="btn btn-primary edit-btn" target-form="add-form" type="submit">提交修改</button>
+    <button class="btn btn-primary edit-btn" target-form="add-form" type="submit" data-toggle="modal" data-target="#myModal">提交修改</button>
   </div>
 </form>
- 
               </div>
             </div>
-          
-               <div class="col-sm-6 col-lg-3">
+          </div>
+      
+          <div class="col-sm-6 col-lg-3">
             <div class="card">
               <div class="card-header bg-purple">
                 <h4>具体使用步骤</h4>
@@ -121,9 +141,6 @@
               </div>
             </div>
           </div>
-     
-          
-          
       </div>
       
     </main>
@@ -154,9 +171,11 @@ function submitForm(event) {
       if (xhr.status === 200) {   
         const response = JSON.parse(xhr.responseText);
         if (response.code == 200) {
-          alert('提交成功');
+          document.getElementById('modalBodyContent').innerText = '提交成功';
+          $('#myModal').modal('show');
         } else {
-          alert('提交失败');
+          document.getElementById('modalBodyContent').innerText = '提交失败';
+          $('#myModal').modal('show');
         }
       } else {
         console.error('请求出错', xhr.status);
